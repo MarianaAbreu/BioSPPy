@@ -18,4 +18,4 @@ from .__version__ import __version__
 # allow lazy loading
 from .signals import bvp, ecg, eda, eeg, emg, resp, tools
 from .features import feature_vector
-from .classification import dissimilarity_based, supervised_learning
+from .classification import dissimilarity_based, supervised_learning, utils_classification
