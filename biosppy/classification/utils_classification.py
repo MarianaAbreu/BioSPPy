@@ -1,7 +1,8 @@
 from scipy.stats import pearsonr
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
-
+from keras.layers import Input, Dense
+from keras.models import Model
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
