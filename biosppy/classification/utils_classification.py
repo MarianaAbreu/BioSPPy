@@ -40,7 +40,7 @@ from sklearn.utils.multiclass import unique_labels
 
 import random
 from sklearn.model_selection import train_test_split
-import multiAE_creation as mc
+
 
 
 def part_balance(list_vecs, list_lab):
