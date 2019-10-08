@@ -32,7 +32,7 @@ from sklearn import svm, datasets
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
-
+import pickle
 
 # classifiers = [DecisionTreeClassifier(max_depth=5),
 #     AdaBoostClassifier(),GradientBoostingClassifier()]
