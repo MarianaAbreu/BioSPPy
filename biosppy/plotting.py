@@ -1231,3 +1231,110 @@ def plot_clustering(data=None, clusters=None, path=None, show=False):
     else:
         # close
         plt.close(fig)
+
+
+def plot_ecg_derived_resp(ts=None,
+              raw=None,
+              derived=None,
+              ecg=None,
+              zeros=None,
+              resp_rate_ts=None,
+              resp_rate=None,
+              raw_rate=None,
+              raw_rate_ts=None,
+              path=None,
+              show=False):
+    """Create a summary plot from the output of signals.bvp.bvp.
+
+    Parameters
+    ----------
+    ts : array
+        Signal time axis reference (seconds).
+    raw : array
+        Raw Resp signal.
+    filtered : array
+        Filtered Resp signal.
+    zeros : array
+        Indices of Respiration zero crossings.
+    resp_rate_ts : array
+        Respiration rate time axis reference (seconds).
+    resp_rate : array
+        Instantaneous respiration rate (Hz).
+    path : str, optional
+        If provided, the plot will be saved to the specified file.
+    show : bool, optional
+        If True, show the plot immediately.
+
+    """
+
+    fig = plt.figure()
+    fig.suptitle('Respiration Summary')
+
+    # raw signal
+    ax1 = fig.add_subplot(311)
+    norm_der = 2 * (derived - np.min(derived)) / (np.max(derived) - np.min(derived)) - 1
+    if raw is not None:
+        ax1.plot(ts, raw, linewidth=MAJOR_LW, label='Raw')
+    ax1.plot(ts, norm_der, linewidth=MAJOR_LW, label='Derived')
+    ax1.set_ylabel('Amplitude')
+    #ax1.text(0,0,'Correlation ' + str(np.round(pearsonr(raw,norm_der),2)))
+    ax1.legend()
+    ax1.grid()
+
+    # filtered signal with zeros
+    ax2 = fig.add_subplot(312)
+
+    ymin = np.min(derived)
+    ymax = np.max(derived)
+    alpha = 0.1 * (ymax - ymin)
+    ymax += alpha
+    ymin -= alpha
+    if raw is not None:
+        norm_raw = 2 * (raw - np.min(raw)) / (np.max(raw) - np.min(raw)) - 1
+        ax2.plot(ts[:40000], norm_raw[:40000], linewidth=MAJOR_LW, label='Raw', zorder=2)
+
+    norm_ecg = 2 * (ecg - np.min(ecg)) / (np.max(ecg) - np.min(ecg)) - 1
+    norm_filtered = 2 * (derived - np.min(derived)) / (np.max(derived) - np.min(derived)) - 1
+    ax2.plot(ts[:40000], norm_filtered[:40000], linewidth=MAJOR_LW, label='Derived', zorder=4)
+    ax2.plot(ts[:40000], norm_ecg[:40000], linewidth=MAJOR_LW, label='ECG', zorder=1)
+
+    ax2.set_ylabel('Amplitude')
+    ax2.legend()
+    ax2.grid()
+
+    # heart rate
+    ax3 = fig.add_subplot(313, sharex=ax1)
+
+    if raw_rate is not None or raw_rate_ts is not None:
+        ax3.plot(raw_rate_ts, raw_rate,
+             linewidth=MAJOR_LW,
+             label='Raw Respiration Rate')
+    ax3.plot(resp_rate_ts, resp_rate,
+             linewidth=MAJOR_LW,
+             label='Derived Respiration Rate')
+
+    ax3.set_xlabel('Time (s)')
+    ax3.set_ylabel('Respiration Rate (Hz)')
+    ax3.legend()
+    ax3.grid()
+
+    # make layout tight
+    fig.tight_layout()
+
+    # save to file
+    if path is not None:
+        path = utils.normpath(path)
+        root, ext = os.path.splitext(path)
+        ext = ext.lower()
+        if ext not in ['png', 'jpg']:
+            path = root + '.png'
+
+        fig.savefig(path, dpi=200, bbox_inches='tight')
+
+    # show
+    if show:
+        plt.show()
+    else:
+        # close
+        plt.close(fig)
+

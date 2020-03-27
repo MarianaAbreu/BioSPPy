@@ -199,3 +199,23 @@ def matrix_eucd_dist(signal, templates):
     dist_matrix = np.nan_to_num(np.array(dist_matrix_custom))
 
     return dist_matrix
+
+
+
+def corr_metrics(x,y):
+    """Compute several distance metrics for two 1-D arrays
+
+    :return:
+    """
+
+    distance_list = [ssd.cosine,ssd.euclidean, ssd.sqeuclidean, ssd.braycurtis,
+                     ssd.canberra, ssd.chebyshev, ssd.cityblock,
+                     ssd.correlation, ssd.jensenshannon, ssd.minkowski]
+
+    #args = (ts_resp, raw_resp, derived, zeros, ts_rate, rate)
+    #names = ('cosine','euclidean', 'sqeuclidean','braycurtis',
+     #        'canberra', 'chebyshev', 'cityblock',
+      #       'correlation', 'jensenshannon', 'minkowski')
+    #return utils.ReturnTuple(args, names)
+
+    return [(dist(x,y),str(dist)[9:-22]) for dist in distance_list]
